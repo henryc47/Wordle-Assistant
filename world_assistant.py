@@ -1,6 +1,10 @@
 #author-Henry Chadban
 #date-22/01/2022
 #The purpose of this program is to solve the wordle game
+
+#our source for english words was compiled by John Lawler of the University of Michigan
+#it is available at http://www-personal.umich.edu/~jlawler/wordlist.html
+
 text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist.txt"
 
 def import_words():
