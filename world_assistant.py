@@ -26,11 +26,13 @@ def wordle_help():
         if(len(word))==5:
             allowed_words.append(word)
     
+    
+    
     num_words_original = len(allowed_words)
     #now enter the main loop where we can add conditions
     while True:
         user_input = input("Please enter the type of rule: ")
-        if(user_input=='ban letter'):
+        if(user_input=='ban letter') or (user_input=='bl'):
             while True:
                 user_input2 = input("Please enter the character to ban: ")
                 if len(user_input2)!=1:
@@ -49,7 +51,7 @@ def wordle_help():
             allowed_words = new_words
             continue
                         
-        elif(user_input=='force letter'):
+        elif(user_input=='force letter') or (user_input=='fl'):
             while True:
                 user_input2 = input("Please enter the character to force: ")
                 if len(user_input2)!=1:
@@ -69,7 +71,7 @@ def wordle_help():
             allowed_words = new_words
             continue
         
-        elif(user_input=='force letter position'):
+        elif(user_input=='force letter position') or (user_input=='flp'):
             while True:
                 user_input2 = input("Please enter the character to force position: ")
                 if len(user_input2)!=1:
@@ -93,7 +95,7 @@ def wordle_help():
             allowed_words = new_words
             continue
         
-        elif(user_input=='ban letter position'):
+        elif(user_input=='ban letter position') or (user_input=='blp'):
             while True:
                 user_input2 = input("Please enter the character to ban position: ")
                 if len(user_input2)!=1:
@@ -117,6 +119,39 @@ def wordle_help():
             allowed_words = new_words
             continue
         
+        elif (user_input=='ban multiple letter') or (user_input=='bml'):
+            while True:
+                user_input2 = input("Please enter the character to ban multiple copies of: ")
+                if len(user_input2)!=1:
+                    print("please enter a single character")
+                    continue
+                else:
+                    user_input3 = int(input("maximum number of copies of character: "))
+                    new_words = []
+                    for word in allowed_words:
+                        print(word)
+                        char_count = 0#count of the character we are checking in the word
+                        for i in word:
+                            print(i)
+                            print(user_input2)
+                            if i==user_input2:
+                                char_count = char_count + 1
+                                continue
+                            else:
+                                continue
+                        if char_count>user_input3:
+                            print('word culled')
+                            continue
+                        else:
+                            print('word not culled')
+                            new_words.append(word)
+                            continue
+                        
+                    allowed_words = new_words
+                    print(allowed_words)
+                    break
+                
+        
         elif(user_input=="valid words"):
             print(allowed_words)
             num_words = len(allowed_words)
@@ -130,7 +165,8 @@ def wordle_help():
             continue
             
             
-                                                    
+
+                                                        
                 
                 
         
