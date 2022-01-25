@@ -168,8 +168,19 @@ def ban_letter(letter,allowed_words):
             new_words.append(word)
     return new_words          
 
-                                                        
-                
+def force_letter(letter,allowed_words):
+    new_words = []
+    for word in allowed_words:
+        letter_in_word = False
+        for i in word:
+            if(i==letter):
+                letter_in_word = True
+        if letter_in_word == True:
+            new_words.append(word)
+    return new_words
+
+                                            
+
                 
         
                             
