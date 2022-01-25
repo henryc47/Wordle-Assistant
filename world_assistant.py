@@ -51,14 +51,7 @@ def wordle_help():
                     print("please enter a single character")
                     continue
                 else:
-                    new_words = []
-                    for word in allowed_words:
-                        letter_in_word = False
-                        for i in word:
-                            if(i==user_input2):
-                                letter_in_word = True
-                        if letter_in_word == True:
-                            new_words.append(word)
+                    new_words = force_letter(user_input2,allowed_words)
                     break
                         
             allowed_words = new_words
@@ -77,14 +70,9 @@ def wordle_help():
                             print("position must be between 1 and 5 inclusive")
                             continue
                         else:
-                            user_input3 = user_input3-1#convert to standard programming position notation, with 0 as first entry
-                            new_words = []
-                            for word in allowed_words:
-                                position_character = word[user_input3]
-                                if(position_character==user_input2):
-                                    new_words.append(word)
-                            break
-                    break       
+                            new_words = force_letter_position(user_input2,user_input3,allowed_words)        
+                            break     
+                    break
             allowed_words = new_words
             continue
         
@@ -179,7 +167,16 @@ def force_letter(letter,allowed_words):
             new_words.append(word)
     return new_words
 
-                                            
+def force_letter_position(letter,position,allowed_words):
+    new_words = []
+    position = position-1#convert to standard programming position notation, with 0 as first entry
+    for word in allowed_words:
+        position_character = word[position]
+        if(position_character==letter):
+            new_words.append(word)
+        else:
+            continue
+    return new_words                                                         
 
                 
         
