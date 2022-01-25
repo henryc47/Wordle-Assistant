@@ -89,13 +89,8 @@ def wordle_help():
                             print("position must be between 1 and 5 inclusive")
                             continue
                         else:
-                            user_input3 = user_input3-1#convert to standard programming position notation, with 0 as first entry
-                            new_words = []
-                            for word in allowed_words:
-                                position_character = word[user_input3]
-                                if(position_character!=user_input2):
-                                    new_words.append(word)
-                            break
+                            new_words = ban_letter_position(user_input2,user_input3,allowed_words)        
+                            break     
                     break       
             allowed_words = new_words
             continue
@@ -178,7 +173,18 @@ def force_letter_position(letter,position,allowed_words):
             continue
     return new_words                                                         
 
-                
+def ban_letter_position(letter,position,allowed_words):
+    new_words = []
+    position = position-1#convert to standard programming position notation, with 0 as first entry
+    for word in allowed_words:
+        position_character = word[position]
+        if(position_character==letter):
+            continue
+        else:
+            new_words.append(word)
+            continue
+            
+    return new_words                 
         
                             
 
