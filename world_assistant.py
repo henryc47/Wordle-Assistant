@@ -26,8 +26,7 @@ def wordle_help():
         if(len(word))==5:
             allowed_words.append(word)
     
-    
-    
+    allowed_words = ban_letter('-',allowed_words)
     num_words_original = len(allowed_words)
     #now enter the main loop where we can add conditions
     while True:
@@ -39,9 +38,8 @@ def wordle_help():
                     print("please enter a single character")
                     continue
                 else:
-                    new_words = ban_letter(user_input2,allowed_words)
+                    allowed_words = ban_letter(user_input2,allowed_words)
                     break
-            allowed_words = new_words
             continue
                         
         elif(user_input=='force letter') or (user_input=='fl'):
@@ -51,10 +49,9 @@ def wordle_help():
                     print("please enter a single character")
                     continue
                 else:
-                    new_words = force_letter(user_input2,allowed_words)
+                    allowed_words = force_letter(user_input2,allowed_words)
                     break
                         
-            allowed_words = new_words
             continue
         
         elif(user_input=='force letter position') or (user_input=='flp'):
@@ -70,10 +67,9 @@ def wordle_help():
                             print("position must be between 1 and 5 inclusive")
                             continue
                         else:
-                            new_words = force_letter_position(user_input2,user_input3,allowed_words)        
+                            allowed_words = force_letter_position(user_input2,user_input3,allowed_words)        
                             break     
                     break
-            allowed_words = new_words
             continue
         
         elif(user_input=='ban letter position') or (user_input=='blp'):
@@ -89,10 +85,9 @@ def wordle_help():
                             print("position must be between 1 and 5 inclusive")
                             continue
                         else:
-                            new_words = ban_letter_position(user_input2,user_input3,allowed_words)        
+                            allowed_words = ban_letter_position(user_input2,user_input3,allowed_words)        
                             break     
                     break       
-            allowed_words = new_words
             continue
         
         elif (user_input=='ban multiple letter') or (user_input=='bml'):
@@ -103,10 +98,9 @@ def wordle_help():
                     continue
                 else:
                     user_input3 = int(input("maximum number of copies of character: "))
-                    new_words = ban_multiple_letters(user_input2,user_input3,allowed_words)
+                    allowed_words = ban_multiple_letters(user_input2,user_input3,allowed_words)
                     break
         
-            allowed_words = new_words
             continue
         
         elif(user_input=="valid words") or (user_input=="vw"):
