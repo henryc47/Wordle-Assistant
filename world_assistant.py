@@ -39,14 +39,7 @@ def wordle_help():
                     print("please enter a single character")
                     continue
                 else:
-                    new_words = []
-                    for word in allowed_words:
-                        letter_in_word = False
-                        for i in word:
-                            if(i==user_input2):
-                                letter_in_word = True
-                        if letter_in_word == False:
-                            new_words.append(word)
+                    new_words = ban_letter(user_input2,allowed_words)
                     break
             allowed_words = new_words
             continue
@@ -152,7 +145,7 @@ def wordle_help():
                     break
                 
         
-        elif(user_input=="valid words"):
+        elif(user_input=="valid words") or (user_input=="vw"):
             print(allowed_words)
             num_words = len(allowed_words)
             print("number of words allowed now ", num_words, " out of ", num_words_original, " five letter words")
@@ -164,7 +157,16 @@ def wordle_help():
             print("please enter valid input")
             continue
             
-            
+def ban_letter(letter,allowed_words):
+    new_words = []
+    for word in allowed_words:
+        letter_in_word = False
+        for i in word:
+            if(i==letter):
+                letter_in_word = True
+        if letter_in_word == False:
+            new_words.append(word)
+    return new_words          
 
                                                         
                 
