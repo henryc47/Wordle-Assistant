@@ -103,30 +103,11 @@ def wordle_help():
                     continue
                 else:
                     user_input3 = int(input("maximum number of copies of character: "))
-                    new_words = []
-                    for word in allowed_words:
-                        print(word)
-                        char_count = 0#count of the character we are checking in the word
-                        for i in word:
-                            print(i)
-                            print(user_input2)
-                            if i==user_input2:
-                                char_count = char_count + 1
-                                continue
-                            else:
-                                continue
-                        if char_count>user_input3:
-                            print('word culled')
-                            continue
-                        else:
-                            print('word not culled')
-                            new_words.append(word)
-                            continue
-                        
-                    allowed_words = new_words
-                    print(allowed_words)
+                    new_words = ban_multiple_letters(user_input2,user_input3,allowed_words)
                     break
-                
+        
+            allowed_words = new_words
+            continue
         
         elif(user_input=="valid words") or (user_input=="vw"):
             print(allowed_words)
@@ -186,7 +167,24 @@ def ban_letter_position(letter,position,allowed_words):
             
     return new_words                 
         
-                            
+def ban_multiple_letters(letter,max_num,allowed_words):
+    new_words = []
+    for word in allowed_words:
+        char_count = 0#count of the character we are checking in the word
+        for i in word:
+            if i==letter:
+                char_count = char_count + 1
+                continue
+            else:
+                continue
+        if char_count>max_num:
+            continue
+        else:
+            new_words.append(word)
+            continue
+        
+    return new_words
+                
 
         
 
