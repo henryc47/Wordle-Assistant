@@ -135,8 +135,26 @@ def wordle_help():
             user_input2 =  int(input("how many words do you want to print: "))
             best_n_words(user_input2,allowed_words)
             continue
-            
         
+        elif(user_input=="force letter ban position") or (user_input=='flbp'):
+            while True:
+                user_input2 = input("Please enter the character to force: ")
+                if len(user_input2)!=1:
+                    print("please enter a single character")
+                    continue
+                else:
+                    while True:
+                        user_input3 = int(input("Please enter the position where you wish to ban that character: "))
+                        if (user_input3>5) or (user_input3<1):
+                            print("position must be between 1 and 5 inclusive")
+                            continue
+                        else:
+                            allowed_words = force_letter(user_input2,allowed_words)
+                            allowed_words = ban_letter_position(user_input2,user_input3,allowed_words)        
+                            break 
+                    break
+            continue
+            
         elif(user_input=="end"):
             return 0
         
