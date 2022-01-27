@@ -5,7 +5,7 @@
 #our source for english words was compiled by John Lawler of the University of Michigan
 #it is available at http://www-personal.umich.edu/~jlawler/wordlist.html
 import numpy as np#for the argsort
-
+import random
 
 text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist.txt"
 
@@ -134,6 +134,17 @@ def wordle_help():
         elif(user_input=='best words' or (user_input=='bw')):
             user_input2 =  int(input("how many words do you want to print: "))
             best_n_words(user_input2,allowed_words)
+            continue
+        
+        elif(user_input=='worst words') or (user_input=='ww'):
+            user_input2 =  int(input("how many words do you want to print: "))
+            worst_n_words(user_input2,allowed_words)
+            continue
+        
+        elif(user_input=='random word') or (user_input=='rw'):
+            num_words = len(allowed_words)
+            random_word_position = random.randint(0,num_words-1)
+            print(allowed_words[random_word_position])
             continue
         
         elif(user_input=="force letter ban position") or (user_input=='flbp'):
@@ -298,4 +309,9 @@ def best_n_words(n,allowed_words):
         print(i, ' ', allowed_words[word_ranks[i]],' ',word_values[word_ranks[i]])
     return
 
-        
+def worst_n_words(n,allowed_words):
+    (word_ranks,word_values) = best_words(allowed_words)
+    number_words = len(allowed_words)
+    for i in range(min(n,number_words)):
+        print(number_words-i-1, ' ', allowed_words[word_ranks[number_words-i-1]],' ',word_values[word_ranks[number_words-i-1]])
+    return        
