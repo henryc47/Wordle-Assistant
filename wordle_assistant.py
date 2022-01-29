@@ -1,13 +1,14 @@
 #author-Henry Chadban
 #date-22/01/2022
 #The purpose of this program is to solve the wordle game
+#Our source for wordle words was taken directly from the games source code by
+#Tab Atkins Jr in 2021, https://github.com/tabatkins/wordle-list/blob/main/words
 
-#our source for english words was compiled by John Lawler of the University of Michigan
-#it is available at http://www-personal.umich.edu/~jlawler/wordlist.html
+
 import numpy as np#for the argsort
 import random
 
-text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist.txt"
+text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist2.txt"
 
 def import_words():
     with open(text_list) as f:
