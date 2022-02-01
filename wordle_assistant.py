@@ -25,12 +25,72 @@ def import_words():
 def wordle_autoplay_all(strategy,game_type): 
     all_words = import_words()
     
- 
+
+    
+
 #autoplays wordle when given a single word
 def wordle_autoplay(strategy,word):
     #allowed strategies are best word , random and worst word
     all_words = import_words()
     
+#when provided with a "key" word and a "pass" word, the feedback engine
+#will provide a string indicating how correct the "key" word is
+#g for "green" means correct letter and position, y for "yellow" means letter is in the word
+#but not in the correct position, b for "black" means letter is not in the word, or there are less
+#less copies of the letter in the password than the keyword
+#e for error will be returned if two words are different lengths
+def feedback(keyword,password):
+    length_key = len(keyword)
+    length_pass = len(password)
+    if(length_pass!=length_key):
+        print("lengths of words compared must match!")
+        return "e"
+    #create an array of letter frequency
+    dummy = []
+    dummy.append(0)
+    letter_frequencies_password = dummy*26
+    dummy = []
+    dummy.append('b')
+    result = dummy*length_key#result will assume wrongness by default
+    #go through the password and count letter frequencies
+    for letter in password:
+        position = ord(letter)-97
+        letter_frequencies_password[position] = letter_frequencies_password[position]+1
+    
+    #run through word to check for correct letter and position
+    #array to store if position has correct letter guessed
+    dummy = []
+    dummy.append(0)
+    correct_position = dummy*5
+    for i in range(length_key):
+        if(keyword[i]==password[i]):
+            result[i] = 'g'
+            position = ord(keyword[i])-97
+            letter_frequencies_password[position] = letter_frequencies_password[position]-1
+            correct_position[i] = 1
+        else:
+            continue
+    
+    for i in range(length_key):
+        if(keyword[i]==password[i]):
+            continue#we have already dealt with correct letter-position combos
+        else:
+            position = ord(keyword[i])-97
+            if letter_frequencies_password[position]>0:
+                letter_frequencies_password[position] = letter_frequencies_password[position]-1    
+                result[i] = 'y'
+            else:
+                result[i] = 'b'
+    
+    return result        
+            
+            
+            
+            
+            
+    
+
+
     
 #returns a list of all the words in the input with selected length
 def restrict_word_length(list_words,length):
