@@ -8,7 +8,7 @@
 import numpy as np#for the argsort
 import random
 
-text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist2.txt"
+text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist.txt"
 
 def import_words():
     with open(text_list) as f:
@@ -21,15 +21,31 @@ def import_words():
 
     return culled_lines
 
+#wrapper for wordle_autoplay to automatically test a strategy on all wordle words
+def wordle_autoplay_all(strategy,game_type): 
+    all_words = import_words()
+    
+ 
+#autoplays wordle when given a single word
+def wordle_autoplay(strategy,word):
+    #allowed strategies are best word , random and worst word
+    all_words = import_words()
+    
+    
+#returns a list of all the words in the input with selected length
+def restrict_word_length(list_words,length):
+    allowed_words = []
+    for word in list_words:
+        if(len(word))==5:
+            allowed_words.append(word)
+    return allowed_words
+
+
 def wordle_help():
     all_words = import_words()
     #we are only interested in five letter words
-    allowed_words = []
-    for word in all_words:
-        if(len(word))==5:
-            allowed_words.append(word)
-    
-    allowed_words = ban_letter('-',allowed_words)
+    all_words = restrict_word_length(all_words,5)
+    allowed_words = all_words
     num_words_original = len(allowed_words)
     #now enter the main loop where we can add conditions
     while True:
