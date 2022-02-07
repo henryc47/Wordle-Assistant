@@ -7,6 +7,8 @@
 
 import numpy as np#for the argsort
 import random
+import tqdm
+import time
 
 #list of words that the wordle program accepts as valid
 allowed_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/all_words.txt"
@@ -25,6 +27,9 @@ def import_words(source):
 
     return culled_lines
 
+def test():
+    for i in tqdm.tqdm(range(0, 100), desc ="Text You Want"):
+        time.sleep(.1)
 
 
 #wrapper for wordle_autoplay to automatically test a strategy on all wordle words
@@ -34,12 +39,13 @@ def wordle_autoplay_all(strategy):
     count = 0
     longest_so_far = 1
     hardest_word = " "
-    for word in possible_words:
-        num_turns = wordle_autoplay('true_shallow',strategy,word)
+    for word in tqdm.tqdm(possible_words):
+        num_turns = wordle_autoplay('false',strategy,word)
         count = count + num_turns
         if(num_turns>longest_so_far):
             longest_so_far = num_turns
             hardest_word = word
+    print()
     print(strategy," averaged " ,(count/num_words), " turns to deduce the correct word")
     print("the hardest word to deduce was ", hardest_word, " taking ", longest_so_far, "to deduce")
     return 0    
