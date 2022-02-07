@@ -8,7 +8,9 @@
 import numpy as np#for the argsort
 import random
 
-text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/wordlist.txt"
+text_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/all_words.txt"
+possible_list = "/Users/henry_chadban/Documents/Personal Projects, Current/Wordle Assistant/possible_words.txt"
+
 
 def import_words():
     with open(text_list) as f:
@@ -23,15 +25,19 @@ def import_words():
 
 #wrapper for wordle_autoplay to automatically test a strategy on all wordle words
 def wordle_autoplay_all(strategy,game_type): 
-    all_words = import_words()
+    pass    
     
 
     
+
+
+
+
 
 #autoplays wordle when given a single word
 def wordle_autoplay(strategy,word):
     #allowed strategies are best word , random and worst word
-    all_words = import_words()
+    pass
     
 #when provided with a "key" word and a "pass" word, the feedback engine
 #will provide a string indicating how correct the "key" word is
