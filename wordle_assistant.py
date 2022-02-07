@@ -28,8 +28,15 @@ def import_words(source):
 
 
 #wrapper for wordle_autoplay to automatically test a strategy on all wordle words
-def wordle_autoplay_all(strategy,game_type): 
-    pass    
+def wordle_autoplay_all(strategy): 
+    possible_words = restrict_word_length(import_words(possible_list),5)
+    num_words = len(possible_words)
+    count = 0
+    for word in possible_words:
+        num_turns = wordle_autoplay('true_shallow',strategy,word)
+        count = count + num_turns
+    print(strategy," averaged " ,(count/num_words), " turns to deduce the correct word")
+    return 0    
 
 
 #serves as the base class for different "player classes" which implement different 
