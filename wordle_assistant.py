@@ -159,6 +159,7 @@ def wordle_help():
                     continue
                 else:
                     while True:
+
                         user_input3 = int(input("Please enter the position to ban: "))
                         if (user_input3>5) or (user_input3<1):
                             print("position must be between 1 and 5 inclusive")
