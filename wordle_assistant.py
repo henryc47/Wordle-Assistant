@@ -32,11 +32,35 @@ def wordle_autoplay_all(strategy):
     possible_words = restrict_word_length(import_words(possible_list),5)
     num_words = len(possible_words)
     count = 0
+    longest_so_far = 1
+    hardest_word = " "
     for word in possible_words:
         num_turns = wordle_autoplay('true_shallow',strategy,word)
         count = count + num_turns
+        if(num_turns>longest_so_far):
+            longest_so_far = num_turns
+            hardest_word = word
     print(strategy," averaged " ,(count/num_words), " turns to deduce the correct word")
+    print("the hardest word to deduce was ", hardest_word, " taking ", longest_so_far, "to deduce")
     return 0    
+
+#autoplays wordle when given a single word
+def wordle_autoplay(verbosity,strategy,word):
+    #allowed strategies are best word , random and worst word
+    player = create_player(verbosity,strategy)
+    info = "start"
+    turns = 0
+    #loop till we guess the correct word
+    while(info!=list("ggggg")):
+        guess = player.response(info)
+        info = feedback(guess,word)
+        turns = turns + 1
+        if(verbosity=='true'):
+            print(turns, " ", guess, " ", info)
+    
+    if(verbosity=='true' or verbosity=='true_shallow'):
+        print(strategy," deduced the word was ", word, " in ",turns, " turns")
+    return turns
 
 
 #serves as the base class for different "player classes" which implement different 
@@ -61,44 +85,45 @@ class wp_random_allowed(wordle_player_base):
         random_word_position = random.randint(0,num_words-1)
         self.new_response = self.allowed_words[random_word_position]
         return(self.new_response)
+
+#randomly chooses a word from the list of still possible words    
+class wp_random_possible(wordle_player_base):
+    def response(self,feedback):
+        self.possible_words = restrict_list(self.possible_words,self.new_response,feedback)
+        num_words = len(self.possible_words)
+        random_word_position = random.randint(0,num_words-1)
+        self.new_response = self.possible_words[random_word_position]
+        return(self.new_response)
+
+#determines the best possible word using the alpha strategy(our original strategy)
+class wp_best_alpha_possible(wordle_player_base):
+    def response(self,feedback):  
+        self.possible_words = restrict_list(self.possible_words,self.new_response,feedback)
+        self.new_response = best_word_alpha(self.possible_words)
+        return(self.new_response)
+        
+class wp_best_alpha_allowed(wordle_player_base):        
+    def response(self,feedback):  
+        self.allowed_words = restrict_list(self.allowed_words,self.new_response,feedback)
+        self.new_response = best_word_alpha(self.allowed_words)
+        return(self.new_response)
     
 #create a player with a particular strategy and level of verbosity
 def create_player(verbosity,strategy):
     if(strategy=='random_allowed' or strategy=='ra'):
         player = wp_random_allowed(verbosity)
+    elif(strategy=='random_possible' or strategy=='rp'):
+        player = wp_random_possible(verbosity)
+    elif(strategy=='best_alpha_posible' or strategy=='bap'):
+        player = wp_best_alpha_possible(verbosity)
+    elif(strategy=='best_alpha_allowed' or strategy=='baa'):
+        player = wp_best_alpha_allowed(verbosity)
+    
+    
     else:
         raise NotImplementedError("There is no ", strategy, " class implemented")
     
     return player
-    
-        
-        
-#autoplays wordle when given a single word
-def wordle_autoplay(verbosity,strategy,word):
-    #allowed strategies are best word , random and worst word
-    player = create_player(verbosity,strategy)
-    info = "start"
-    turns = 0
-    #loop till we guess the correct word
-    while(info!=list("ggggg")):
-        guess = player.response(info)
-        info = feedback(guess,word)
-        turns = turns + 1
-        if(verbosity=='true'):
-            print(turns, " ", guess, " ", info)
-    
-    if(verbosity=='true' or verbosity=='true_shallow'):
-        print(strategy," deduced the word was ", word, " in ",turns, " turns")
-    return turns
-
-        
-    
-    
-    
-    
-
-
-
 
 
 
@@ -506,3 +531,8 @@ def worst_n_words(n,allowed_words):
     for i in range(min(n,number_words)):
         print(number_words-i-1, ' ', allowed_words[word_ranks[number_words-i-1]],' ',word_values[word_ranks[number_words-i-1]])
     return        
+
+def best_word_alpha(allowed_words):
+    (word_ranks,word_values) = best_words(allowed_words)
+    best_word = allowed_words[word_ranks[0]]
+    return best_word
