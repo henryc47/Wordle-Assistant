@@ -102,17 +102,19 @@ class wp_random_possible(wordle_player_base):
         return(self.new_response)
 
 #determines the best possible word using the alpha strategy(our original strategy)
-class wp_best_alpha_possible(wordle_player_base):
+class wp_best_both_possible(wordle_player_base):
     def response(self,feedback):  
         self.possible_words = restrict_list(self.possible_words,self.new_response,feedback)
-        self.new_response = best_word_alpha(self.possible_words)
+        self.new_response =   best_word_both(self.possible_words)
         return(self.new_response)
         
-class wp_best_alpha_allowed(wordle_player_base):        
+class wp_best_both_allowed(wordle_player_base):        
     def response(self,feedback):  
         self.allowed_words = restrict_list(self.allowed_words,self.new_response,feedback)
-        self.new_response = best_word_alpha(self.allowed_words)
+        self.new_response = best_word_both(self.allowed_words)
         return(self.new_response)
+
+#class wp_info_theory_possible()
     
 #create a player with a particular strategy and level of verbosity
 def create_player(verbosity,strategy):
@@ -121,9 +123,9 @@ def create_player(verbosity,strategy):
     elif(strategy=='random_possible' or strategy=='rp'):
         player = wp_random_possible(verbosity)
     elif(strategy=='best_alpha_posible' or strategy=='bap'):
-        player = wp_best_alpha_possible(verbosity)
+        player = wp_best_both_possible(verbosity)
     elif(strategy=='best_alpha_allowed' or strategy=='baa'):
-        player = wp_best_alpha_allowed(verbosity)
+        player = wp_best_both_allowed(verbosity)
     
     
     else:
@@ -242,7 +244,11 @@ def restrict_word_length(list_words,length):
 
 
 def wordle_help():
-    all_words = import_words(allowed_list)
+    user_input0 = input("type 'y' if you wish to display only words that can actually be the answer ")
+    if(user_input0=='y'):
+         all_words = import_words(possible_list)
+    else:
+         all_words = import_words(allowed_list)    
     #we are only interested in five letter words
     all_words = restrict_word_length(all_words,5)
     allowed_words = all_words
@@ -344,19 +350,38 @@ def wordle_help():
                 print('')
         
         elif(user_input=='word value') or (user_input=='wv'):
-            word_values = word_value(allowed_words)
+            while True:
+                strategy = input("which strategy will you use to value words: ")
+                if((strategy=="both") or (strategy=="letter_only") or (strategy=="position_only")):
+                    break
+                else:
+                    print("valid strategies are 'both', 'letter_only' and 'position_only' ")
+                    
+            word_values = word_value(allowed_words,strategy)
             for i in range(len(allowed_words)):
                 print(allowed_words[i],' ',word_values[i])
             continue
         
         elif(user_input=='best words' or (user_input=='bw')):
             user_input2 =  int(input("how many words do you want to print: "))
-            best_n_words(user_input2,allowed_words)
-            continue
+            while True:
+                strategy = input("which strategy will you use to value words: ")
+                if((strategy=="both") or (strategy=="letter_only") or (strategy=="position_only")):
+                    break
+                else:
+                    print("valid strategies are 'both', 'letter_only' and 'position_only' ")
+            best_n_words(user_input2,allowed_words,strategy)         
+
         
         elif(user_input=='worst words') or (user_input=='ww'):
             user_input2 =  int(input("how many words do you want to print: "))
-            worst_n_words(user_input2,allowed_words)
+            while True:
+                strategy = input("which strategy will you use to value words: ")
+                if((strategy=="both") or (strategy=="letter_only") or (strategy=="position_only")):
+                    break
+                else:
+                    print("valid strategies are 'both', 'letter_only' and 'position_only' ")
+            worst_n_words(user_input2,allowed_words,strategy)
             continue
         
         elif(user_input=='random word') or (user_input=='rw'):
@@ -488,7 +513,13 @@ def get_letter_position_frequency(allowed_words):
             
     return letter_position_frequencies          
 
-def word_value(allowed_words):
+#strategy types are both(alpha), letter frequency only(beta) and position frequency only(gamma)
+def word_value(allowed_words,strategy):
+    if((strategy=="both") or (strategy=="letter_only") or (strategy=="position_only")):
+        pass
+    else:
+         raise NotImplementedError("There is no ", strategy, " implemented for valuing words")
+         
     letter_frequency = get_letter_frequency(allowed_words)
     position_frequency = get_letter_position_frequency(allowed_words)
     num_words = len(allowed_words)
@@ -501,44 +532,48 @@ def word_value(allowed_words):
             letter_value = ord(letter)-97#value of the letter where a=0,b=1,etc
             if(letter_value>=0) and (letter_value<=26):#make sure it is a valid lower case letter
                 letter_position_value = letter_value*5+j
-                #add the letter position frequency to the word value
-                word_value_array[i] = word_value_array[i]+position_frequency[letter_position_value]
-                #we know the letter is now in the word
+                #add the letter position frequency to the word value 
+                if(strategy=='position_only') or (strategy=='both'):#only if we are taking account the position frequency
+                    word_value_array[i] = word_value_array[i]+position_frequency[letter_position_value]
+                    #we know the letter is now in the word
                 letter_in_word[letter_value]=1
             else:
-                continue
+                pass
         #add the overall frequency of all the letters found in the word to the word value
         #we only do not double count letters found in a word more than once
         value_from_letters = 0
-        for k in range(26):
-            value_from_letters = value_from_letters + letter_frequency[k]*letter_in_word[k]
-        
-        word_value_array[i] = word_value_array[i]+value_from_letters
+        if(strategy=='letter_only') or (strategy=='both'):#only if we are taking into account total letter frequencies
+            for k in range(26):
+                value_from_letters = value_from_letters + letter_frequency[k]*letter_in_word[k]
+            
+            word_value_array[i] = word_value_array[i]+value_from_letters
+        else:
+            pass
         
     return word_value_array        
                       
-def best_words(allowed_words):
-    word_values = word_value(allowed_words)
+def best_words(allowed_words,strategy):
+    word_values = word_value(allowed_words,strategy)
     word_values = np.array(word_values)
     word_ranks = word_values.argsort()
     word_ranks = word_ranks[::-1]#reverse the array so largest values are at the left side
     return (word_ranks,word_values)
 
-def best_n_words(n,allowed_words):
-    (word_ranks,word_values) = best_words(allowed_words)
+def best_n_words(n,allowed_words,strategy):
+    (word_ranks,word_values) = best_words(allowed_words,strategy)
     number_words = len(allowed_words)
     for i in range(min(n,number_words)):
         print(i, ' ', allowed_words[word_ranks[i]],' ',word_values[word_ranks[i]])
     return
 
-def worst_n_words(n,allowed_words):
-    (word_ranks,word_values) = best_words(allowed_words)
+def worst_n_words(n,allowed_words,strategy):
+    (word_ranks,word_values) = best_words(allowed_words,strategy)
     number_words = len(allowed_words)
     for i in range(min(n,number_words)):
         print(number_words-i-1, ' ', allowed_words[word_ranks[number_words-i-1]],' ',word_values[word_ranks[number_words-i-1]])
     return        
 
-def best_word_alpha(allowed_words):
-    (word_ranks,word_values) = best_words(allowed_words)
+def best_word_both(allowed_words):
+    (word_ranks,word_values) = best_words(allowed_words,'both')
     best_word = allowed_words[word_ranks[0]]
     return best_word
