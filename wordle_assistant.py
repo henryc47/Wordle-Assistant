@@ -105,14 +105,39 @@ class wp_random_possible(wordle_player_base):
 class wp_best_both_possible(wordle_player_base):
     def response(self,feedback):  
         self.possible_words = restrict_list(self.possible_words,self.new_response,feedback)
-        self.new_response =   best_word_both(self.possible_words)
+        self.new_response =   best_word(self.possible_words,'both')
         return(self.new_response)
         
 class wp_best_both_allowed(wordle_player_base):        
     def response(self,feedback):  
         self.allowed_words = restrict_list(self.allowed_words,self.new_response,feedback)
-        self.new_response = best_word_both(self.allowed_words)
+        self.new_response = best_word(self.allowed_words,'both')
         return(self.new_response)
+    
+class wp_best_letter_possible(wordle_player_base):
+    def response(self,feedback):  
+        self.possible_words = restrict_list(self.possible_words,self.new_response,feedback)
+        self.new_response =  best_word(self.possible_words,'letter_only')
+        return(self.new_response)
+        
+class wp_best_letter_allowed(wordle_player_base):        
+    def response(self,feedback):  
+        self.allowed_words = restrict_list(self.allowed_words,self.new_response,feedback)
+        self.new_response = best_word(self.allowed_words,'letter_only')
+        return(self.new_response)
+    
+class wp_best_position_possible(wordle_player_base):
+    def response(self,feedback):  
+        self.possible_words = restrict_list(self.possible_words,self.new_response,feedback)
+        self.new_response =   best_word(self.possible_words,'position_only')
+        return(self.new_response)
+        
+class wp_best_position_allowed(wordle_player_base):        
+    def response(self,feedback):  
+        self.allowed_words = restrict_list(self.allowed_words,self.new_response,feedback)
+        self.new_response = best_word(self.allowed_words,'position_only')
+        return(self.new_response)
+
 
 #class wp_info_theory_possible()
     
@@ -122,11 +147,18 @@ def create_player(verbosity,strategy):
         player = wp_random_allowed(verbosity)
     elif(strategy=='random_possible' or strategy=='rp'):
         player = wp_random_possible(verbosity)
-    elif(strategy=='best_alpha_posible' or strategy=='bap'):
+    elif(strategy=='best_both_posible' or strategy=='bbp'):
         player = wp_best_both_possible(verbosity)
-    elif(strategy=='best_alpha_allowed' or strategy=='baa'):
+    elif(strategy=='best_both_allowed' or strategy=='bba'):
         player = wp_best_both_allowed(verbosity)
-    
+    elif(strategy=='best_letter_posible' or strategy=='blp'):
+        player = wp_best_both_possible(verbosity)
+    elif(strategy=='best_letter_allowed' or strategy=='bla'):
+        player = wp_best_both_allowed(verbosity)
+    elif(strategy=='best_position_posible' or strategy=='bpp'):
+        player = wp_best_position_possible(verbosity)
+    elif(strategy=='best_position_allowed' or strategy=='bpa'):
+        player = wp_best_position_allowed(verbosity)
     
     else:
         raise NotImplementedError("There is no ", strategy, " class implemented")
@@ -573,7 +605,8 @@ def worst_n_words(n,allowed_words,strategy):
         print(number_words-i-1, ' ', allowed_words[word_ranks[number_words-i-1]],' ',word_values[word_ranks[number_words-i-1]])
     return        
 
-def best_word_both(allowed_words):
-    (word_ranks,word_values) = best_words(allowed_words,'both')
+def best_word(allowed_words,strategy):
+    (word_ranks,word_values) = best_words(allowed_words,strategy)
     best_word = allowed_words[word_ranks[0]]
     return best_word
+
