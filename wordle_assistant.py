@@ -38,6 +38,7 @@ def wordle_autoplay_all(strategy):
     num_words = len(possible_words)
     count = 0
     longest_so_far = 1
+    num_failures = 0
     hardest_word = " "
     for word in tqdm.tqdm(possible_words):
         num_turns = wordle_autoplay('false',strategy,word)
@@ -45,9 +46,12 @@ def wordle_autoplay_all(strategy):
         if(num_turns>longest_so_far):
             longest_so_far = num_turns
             hardest_word = word
+        if(num_turns>6):
+            num_failures = num_failures + 1
     print()
     print(strategy," averaged " ,(count/num_words), " turns to deduce the correct word")
     print("the hardest word to deduce was ", hardest_word, " taking ", longest_so_far, "to deduce")
+    print("we failed to find the word in six turns or under ", num_failures, " times")
     return 0    
 
 #autoplays wordle when given a single word
@@ -182,23 +186,23 @@ def create_player(verbosity,strategy):
         player = wp_random_allowed(verbosity)
     elif(strategy=='random_possible' or strategy=='rp'):
         player = wp_random_possible(verbosity)
-    elif(strategy=='best_both_posible' or strategy=='bbp'):
+    elif(strategy=='best_both_possible' or strategy=='bbp'):
         player = wp_best_both_possible(verbosity)
     elif(strategy=='best_both_allowed' or strategy=='bba'):
         player = wp_best_both_allowed(verbosity)
-    elif(strategy=='best_letter_posible' or strategy=='blp'):
+    elif(strategy=='best_letter_possible' or strategy=='blp'):
         player = wp_best_both_possible(verbosity)
     elif(strategy=='best_letter_allowed' or strategy=='bla'):
         player = wp_best_both_allowed(verbosity)
-    elif(strategy=='best_position_posible' or strategy=='bpp'):
+    elif(strategy=='best_position_possible' or strategy=='bpp'):
         player = wp_best_position_possible(verbosity)
     elif(strategy=='best_position_allowed' or strategy=='bpa'):
         player = wp_best_position_allowed(verbosity)
-    elif(strategy=='worst_both_posible' or strategy=='wbp'):
+    elif(strategy=='worst_both_possible' or strategy=='wbp'):
         player = wp_worst_both_possible(verbosity)
     elif(strategy=='worst_both_allowed' or strategy=='wba'):
         player = wp_worst_both_allowed(verbosity)
-    elif(strategy=='worst_letter_posible' or strategy=='wlp'):
+    elif(strategy=='worst_letter_possible' or strategy=='wlp'):
         player = wp_worst_both_possible(verbosity)
     elif(strategy=='worst_letter_allowed' or strategy=='wla'):
         player = wp_worst_both_allowed(verbosity)
